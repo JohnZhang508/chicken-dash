@@ -50,20 +50,30 @@ class Player extends SpriteGroupComponent<PlayerState>
 
     // Add a Player to the game: loadCharacterSprites
     // Add a Player to the game: Default Dash onLoad to center state
+    await _loadCharacterSprites();
+    current = PlayerState.center;
   }
 
   @override
   void update(double dt) {
     // Add a Player to the game: Add game state check
+    if (gameRef.gameManager.isGameOver || gameRef.gameManager.isIntro) {
+      return;
+    }
 
     // Add a Player to the game: Add calcualtion for Dash's horizontal velocity
-
+    _velocity.x = _hAxisInput * jumpSpeed;
     final double dashHorizontalCenter = size.x / 2;
 
     // Add a Player to the game: Add infinite side boundaries logic
-
+    if (position.x < dashHorizontalCenter) {
+      position.x = gameRef.size.x - (dashHorizontalCenter);
+    }
+    if (position.x > gameRef.size.x - dashHorizontalCenter) {
+      position.x = dashHorizontalCenter;
+    }
     // Core gameplay: Add gravity
-
+    position += _velocity * dt;
     // Add a Player to the game: Calculate Dash's current position based on
     // her velocity over elapsed time since last update cycle
     super.update(dt);
